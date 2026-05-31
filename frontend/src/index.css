@@ -1,0 +1,620 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #ccff00;
+  --color-secondary: #00f0ff;
+  --color-tertiary: #dcefff;
+  --color-neutral: #757967;
+  --color-ink: #101609;
+  --color-surface: #151c0e;
+  --color-surface-2: #1c2413;
+  --color-line: rgba(220, 239, 255, 0.12);
+  --color-muted: rgba(220, 239, 255, 0.68);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(204, 255, 0, 0.13), transparent 30%),
+    radial-gradient(circle at 85% 15%, rgba(0, 240, 255, 0.1), transparent 27%),
+    linear-gradient(135deg, #101609 0%, #151c0e 44%, #0b1007 100%);
+  color: var(--color-tertiary);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-synthesis: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-kicker {
+  @apply text-xs font-semibold uppercase tracking-widest;
+  color: var(--color-primary);
+}
+
+.page-title {
+  @apply mt-1 text-3xl font-bold tracking-normal;
+  color: var(--color-tertiary);
+}
+
+.panel {
+  @apply rounded-lg border p-4 shadow-sm;
+  border-color: var(--color-line);
+  background: rgba(21, 28, 14, 0.92);
+  color: var(--color-tertiary);
+}
+
+.panel-highlight {
+  @apply rounded-lg border p-5 shadow-lg;
+  border-color: var(--color-line);
+  background: rgba(21, 28, 14, 0.95);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+}
+
+.hero-panel {
+  @apply relative rounded-lg border p-5 shadow-lg backdrop-blur;
+  border-color: rgba(204, 255, 0, 0.18);
+  background:
+    linear-gradient(135deg, rgba(204, 255, 0, 0.09), transparent 40%),
+    rgba(21, 28, 14, 0.82);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.32);
+}
+
+.hero-panel-glow {
+  @apply absolute inset-y-0 right-0 w-1/2;
+  background: linear-gradient(270deg, rgba(0, 240, 255, 0.13), transparent);
+}
+
+.workout-shell {
+  @apply overflow-hidden rounded-lg border shadow-xl;
+  border-color: var(--color-line);
+  background: rgba(16, 22, 9, 0.92);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+}
+
+.workout-header {
+  @apply flex flex-col gap-4 px-5 py-6 sm:flex-row sm:items-start sm:justify-between;
+  background-image:
+    linear-gradient(135deg, rgba(204, 255, 0, 0.18), transparent 42%),
+    radial-gradient(circle at top right, rgba(0, 240, 255, 0.18), transparent 30%),
+    linear-gradient(180deg, #18200f, #101609);
+}
+
+.workout-eyebrow {
+  @apply inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide;
+  border-color: rgba(204, 255, 0, 0.25);
+  background: rgba(204, 255, 0, 0.1);
+  color: var(--color-primary);
+}
+
+.dark-badge {
+  @apply inline-flex rounded-md border px-3 py-1 text-xs font-semibold uppercase tracking-wide;
+  border-color: rgba(220, 239, 255, 0.14);
+  background: rgba(220, 239, 255, 0.08);
+  color: var(--color-tertiary);
+}
+
+.session-stats {
+  @apply grid gap-3 border-b p-4 sm:grid-cols-3;
+  border-color: var(--color-line);
+  background: rgba(117, 121, 103, 0.08);
+}
+
+.stat-tile {
+  @apply rounded-lg border px-4 py-3 shadow-sm;
+  border-color: var(--color-line);
+  background: rgba(28, 36, 19, 0.95);
+}
+
+.stat-tile p {
+  @apply text-xs font-semibold uppercase tracking-wide;
+  color: var(--color-neutral);
+}
+
+.stat-tile strong {
+  @apply mt-1 block text-2xl font-black tracking-normal;
+  color: var(--color-primary);
+}
+
+.metric-card {
+  @apply rounded-lg border px-4 py-3 shadow-md;
+  border-color: rgba(204, 255, 0, 0.18);
+  background: rgba(28, 36, 19, 0.9);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.26);
+}
+
+.current-exercise-card {
+  @apply relative mx-4 mt-5 overflow-hidden rounded-lg border p-4 shadow-lg;
+  border-color: rgba(204, 255, 0, 0.24);
+  background:
+    linear-gradient(135deg, rgba(204, 255, 0, 0.16), transparent 38%),
+    radial-gradient(circle at 84% 10%, rgba(0, 240, 255, 0.12), transparent 24%),
+    #1c2413;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+}
+
+.current-exercise-accent {
+  @apply absolute left-0 top-0 h-full w-1.5;
+  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+}
+
+.current-kicker {
+  @apply rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide;
+  background: var(--color-primary);
+  color: var(--color-ink);
+}
+
+.info-chip {
+  @apply inline-flex rounded-md border px-3 py-1 text-sm font-semibold shadow-sm;
+  border-color: rgba(220, 239, 255, 0.14);
+  background: rgba(220, 239, 255, 0.08);
+  color: var(--color-tertiary);
+}
+
+.set-console {
+  @apply rounded-lg border p-4 shadow-lg;
+  border-color: var(--color-line);
+  background: rgba(16, 22, 9, 0.86);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+}
+
+.progress-ring {
+  --progress: 0%;
+  @apply grid h-24 w-24 place-items-center rounded-full;
+  background: conic-gradient(var(--color-primary) var(--progress), rgba(220, 239, 255, 0.12) 0);
+}
+
+.progress-ring > div {
+  @apply grid h-16 w-16 place-items-center rounded-full text-center shadow-inner;
+  background: var(--color-surface);
+}
+
+.progress-ring strong {
+  @apply text-2xl font-black leading-none;
+  color: var(--color-primary);
+}
+
+.progress-ring span {
+  @apply text-sm font-bold;
+  color: var(--color-muted);
+}
+
+.exercise-card {
+  @apply mx-4 rounded-lg border p-4 shadow-sm;
+}
+
+.exercise-card-idle {
+  border-color: var(--color-line);
+  background: rgba(21, 28, 14, 0.82);
+}
+
+.exercise-card-idle:hover {
+  border-color: rgba(204, 255, 0, 0.28);
+  background: rgba(28, 36, 19, 0.96);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.26);
+}
+
+.exercise-card-active {
+  border-color: rgba(204, 255, 0, 0.62);
+  background: rgba(204, 255, 0, 0.1);
+  box-shadow: 0 18px 52px rgba(204, 255, 0, 0.08);
+}
+
+.exercise-card-done {
+  border-color: rgba(0, 240, 255, 0.26);
+  background: rgba(0, 240, 255, 0.08);
+}
+
+.exercise-index {
+  @apply inline-grid h-8 w-8 shrink-0 place-items-center rounded-md text-sm font-black;
+  background: rgba(220, 239, 255, 0.1);
+  color: var(--color-tertiary);
+}
+
+.exercise-index-active {
+  background: var(--color-primary);
+  color: var(--color-ink);
+}
+
+.workout-console {
+  @apply space-y-5;
+}
+
+.console-topbar {
+  @apply -mx-4 -mt-8 flex min-h-16 items-center justify-between gap-4 border-b px-4 py-3 md:-mx-8 md:px-6;
+  border-color: var(--color-line);
+  background: rgba(11, 16, 7, 0.72);
+}
+
+.console-brand {
+  @apply text-sm font-black uppercase tracking-wide;
+  color: var(--color-primary);
+}
+
+.console-heading {
+  @apply flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between;
+}
+
+.console-heading h2 {
+  @apply text-4xl font-black tracking-normal;
+  color: var(--color-tertiary);
+}
+
+.console-heading p {
+  @apply mt-1 text-sm;
+  color: var(--color-muted);
+}
+
+.console-grid {
+  @apply grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px];
+}
+
+.auth-shell {
+  @apply flex min-h-screen items-center justify-center p-4 sm:p-6;
+}
+
+.auth-card {
+  @apply grid w-full max-w-6xl overflow-hidden rounded-lg border shadow-[0_30px_90px_rgba(0,0,0,0.45)] lg:grid-cols-[1.05fr_1fr];
+  border-color: var(--color-line);
+  background: rgba(17, 23, 12, 0.96);
+}
+
+.auth-aside {
+  @apply relative hidden min-h-[640px] overflow-hidden border-r lg:block;
+  border-color: rgba(220, 239, 255, 0.08);
+}
+
+.auth-aside-overlay {
+  @apply absolute inset-0;
+  background:
+    radial-gradient(circle at top left, rgba(204, 255, 0, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(7, 11, 14, 0.72), rgba(7, 11, 14, 0.92));
+}
+
+.auth-aside-content {
+  @apply relative z-10 flex h-full flex-col justify-between p-8;
+}
+
+.auth-brand {
+  @apply text-3xl font-black uppercase tracking-normal;
+  color: var(--color-primary);
+}
+
+.auth-content {
+  @apply p-6 sm:p-8 lg:p-10;
+}
+
+.auth-label {
+  @apply mb-2 block text-xs font-semibold uppercase tracking-wide;
+  color: var(--color-neutral);
+}
+
+.auth-input {
+  @apply w-full rounded-[4px] border px-3 py-2.5 text-sm outline-none transition;
+  border-color: var(--color-line);
+  background: rgba(16, 22, 9, 0.9);
+  color: var(--color-tertiary);
+}
+
+.auth-input::placeholder {
+  color: rgba(220, 239, 255, 0.24);
+}
+
+.auth-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(204, 255, 0, 0.12);
+}
+
+.set-panel,
+.plan-panel,
+.recovery-card,
+.metric-box {
+  @apply rounded-lg border;
+  border-color: var(--color-line);
+  background: rgba(21, 28, 14, 0.92);
+}
+
+.set-panel {
+  @apply overflow-hidden;
+}
+
+.set-panel-header {
+  @apply flex items-center gap-4 border-b px-5 py-4;
+  border-color: var(--color-line);
+}
+
+.set-panel-header h3 {
+  @apply truncate text-lg font-black;
+  color: var(--color-tertiary);
+}
+
+.set-panel-header p {
+  @apply text-xs font-semibold;
+  color: var(--color-muted);
+}
+
+.exercise-glyph {
+  @apply grid h-12 w-12 shrink-0 place-items-center rounded-md text-xl font-black;
+  background: rgba(204, 255, 0, 0.12);
+  color: var(--color-primary);
+}
+
+.set-table {
+  @apply space-y-2 p-5;
+}
+
+.set-table-head,
+.set-row {
+  @apply grid items-center gap-3;
+  grid-template-columns: 48px minmax(76px, 1fr) minmax(86px, 1fr) minmax(70px, 0.8fr) 86px;
+}
+
+.set-table-head {
+  @apply px-3 pb-2 text-xs font-bold uppercase tracking-wide;
+  color: var(--color-muted);
+}
+
+.set-row {
+  @apply min-h-14 rounded-md px-3 text-sm font-semibold;
+  background: rgba(220, 239, 255, 0.04);
+  color: rgba(220, 239, 255, 0.58);
+}
+
+.set-row-current {
+  outline: 1px solid rgba(204, 255, 0, 0.55);
+  background: rgba(204, 255, 0, 0.05);
+}
+
+.set-row-done {
+  color: rgba(204, 255, 0, 0.75);
+}
+
+.set-field {
+  @apply rounded px-3 py-2 text-center;
+  background: rgba(11, 16, 7, 0.62);
+  color: var(--color-muted);
+}
+
+.set-check {
+  @apply grid h-6 w-6 place-items-center rounded-full text-xs font-black;
+  background: var(--color-primary);
+  color: var(--color-ink);
+}
+
+.set-empty {
+  @apply block h-6 w-6 rounded-full border;
+  border-color: rgba(220, 239, 255, 0.25);
+}
+
+.set-finish {
+  @apply rounded px-3 py-1 text-xs font-black uppercase tracking-wide;
+  background: var(--color-primary);
+  color: var(--color-ink);
+}
+
+.next-set-button,
+.rest-button {
+  @apply rounded-md px-4 py-3 text-sm font-black uppercase tracking-wide transition;
+}
+
+.next-set-button {
+  background: var(--color-primary);
+  color: var(--color-ink);
+}
+
+.rest-button {
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.recovery-card {
+  @apply flex flex-wrap items-center gap-4 p-4;
+}
+
+.recovery-card h3,
+.plan-panel h3 {
+  @apply text-sm font-black uppercase tracking-wide;
+  color: var(--color-tertiary);
+}
+
+.recovery-card p {
+  @apply text-sm;
+  color: var(--color-muted);
+}
+
+.recovery-ring {
+  --progress: 0%;
+  @apply grid h-14 w-14 shrink-0 place-items-center rounded-full text-xs font-black;
+  background: conic-gradient(var(--color-primary) var(--progress), rgba(220, 239, 255, 0.12) 0);
+  color: var(--color-primary);
+}
+
+.mini-button,
+.play-button {
+  @apply rounded-md border px-3 py-2 text-xs font-bold;
+  border-color: var(--color-line);
+  color: var(--color-tertiary);
+}
+
+.play-button {
+  background: var(--color-tertiary);
+  color: var(--color-ink);
+}
+
+.plan-panel {
+  @apply flex min-h-[450px] flex-col p-5;
+}
+
+.plan-item {
+  @apply flex w-full items-center gap-4 rounded-md px-3 py-3 text-left transition;
+  color: var(--color-muted);
+}
+
+.plan-item-active {
+  background: rgba(204, 255, 0, 0.08);
+  color: var(--color-primary);
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+.plan-dot {
+  @apply grid h-8 w-8 shrink-0 place-items-center rounded-full border text-xs font-black;
+  border-color: rgba(220, 239, 255, 0.22);
+  color: var(--color-ink);
+}
+
+.plan-dot-done {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.plan-item strong {
+  @apply block truncate text-sm font-black;
+}
+
+.plan-item small {
+  @apply block text-xs;
+  color: var(--color-muted);
+}
+
+.add-exercise-button {
+  @apply mt-auto border-t pt-5 text-sm font-bold uppercase tracking-wide;
+  border-color: var(--color-line);
+  color: var(--color-muted);
+}
+
+.console-metrics {
+  @apply grid gap-3 sm:grid-cols-2 xl:grid-cols-4;
+}
+
+.metric-box {
+  @apply p-4;
+}
+
+.metric-box p {
+  @apply text-xs font-semibold uppercase tracking-wide;
+  color: var(--color-muted);
+}
+
+.metric-box strong {
+  @apply mt-2 block text-xl font-black uppercase tracking-wide;
+  color: var(--color-tertiary);
+}
+
+.intensity-bars {
+  @apply mt-4 grid grid-cols-5 gap-1;
+}
+
+.intensity-bars span {
+  @apply h-1 rounded-full;
+  background: var(--color-primary);
+}
+
+.intensity-bars .muted {
+  background: rgba(220, 239, 255, 0.16);
+}
+
+.label {
+  @apply text-xs font-semibold uppercase tracking-wide;
+  color: var(--color-neutral);
+}
+
+.input {
+  @apply w-full rounded-md border px-3 py-2 text-sm outline-none transition;
+  border-color: var(--color-line);
+  background: rgba(16, 22, 9, 0.9);
+  color: var(--color-tertiary);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(204, 255, 0, 0.12);
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-60;
+  background: var(--color-primary);
+  color: var(--color-ink);
+}
+
+.btn-primary:hover {
+  filter: brightness(0.92);
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-md border px-3 py-2 text-sm font-semibold transition;
+  border-color: var(--color-line);
+  background: rgba(220, 239, 255, 0.05);
+  color: var(--color-tertiary);
+}
+
+.btn-secondary:hover {
+  border-color: rgba(0, 240, 255, 0.35);
+  background: rgba(0, 240, 255, 0.1);
+}
+
+.btn-secondary:disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+.btn-danger {
+  @apply inline-flex items-center justify-center rounded-md border px-3 py-2 text-sm font-semibold transition;
+  border-color: rgba(248, 113, 113, 0.28);
+  background: rgba(248, 113, 113, 0.12);
+  color: #fecaca;
+}
+
+.badge {
+  @apply inline-flex rounded-md px-3 py-1 text-xs font-semibold uppercase tracking-wide;
+  background: rgba(220, 239, 255, 0.1);
+  color: var(--color-tertiary);
+}
+
+.error-box {
+  @apply rounded-md border p-4 text-sm;
+  border-color: rgba(248, 113, 113, 0.28);
+  background: rgba(248, 113, 113, 0.12);
+  color: #fecaca;
+}
+
+.success-box {
+  @apply rounded-md border p-4 text-sm;
+  border-color: rgba(204, 255, 0, 0.28);
+  background: rgba(204, 255, 0, 0.08);
+  color: var(--color-primary);
+}
+
+.table-wrap {
+  @apply overflow-hidden rounded-lg border shadow-sm;
+  border-color: var(--color-line);
+  background: var(--color-surface);
+}
+
+.data-table {
+  @apply min-w-full text-left text-sm;
+}
+
+.data-table th {
+  @apply px-4 py-3 text-xs font-semibold uppercase tracking-wide;
+  background: rgba(220, 239, 255, 0.06);
+  color: var(--color-neutral);
+}
+
+.data-table td {
+  @apply px-4 py-3;
+  color: var(--color-muted);
+}

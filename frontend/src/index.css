@@ -4,7 +4,7 @@
   --color-primary: #ccff00;
   --color-secondary: #00f0ff;
   --color-tertiary: #dcefff;
-  --color-neutral: #757967;
+  --color-neutral: #b6c0ae;
   --color-ink: #101609;
   --color-surface: #151c0e;
   --color-surface-2: #1c2413;
@@ -12,9 +12,12 @@
   --color-muted: rgba(220, 239, 255, 0.68);
 }
 
+html {
+  color-scheme: dark;
+}
+
 body {
   margin: 0;
-  min-width: 320px;
   background:
     radial-gradient(circle at 20% 0%, rgba(204, 255, 0, 0.13), transparent 30%),
     radial-gradient(circle at 85% 15%, rgba(0, 240, 255, 0.1), transparent 27%),
@@ -37,9 +40,17 @@ textarea {
   min-height: 100vh;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
 }
 
 .page-kicker {
@@ -235,17 +246,6 @@ a {
   @apply space-y-5;
 }
 
-.console-topbar {
-  @apply -mx-4 -mt-8 flex min-h-16 items-center justify-between gap-4 border-b px-4 py-3 md:-mx-8 md:px-6;
-  border-color: var(--color-line);
-  background: rgba(11, 16, 7, 0.72);
-}
-
-.console-brand {
-  @apply text-sm font-black uppercase tracking-wide;
-  color: var(--color-primary);
-}
-
 .console-heading {
   @apply flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between;
 }
@@ -261,7 +261,7 @@ a {
 }
 
 .console-grid {
-  @apply grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px];
+  @apply grid grid-cols-[minmax(0,1fr)] gap-5 xl:grid-cols-[minmax(0,1fr)_320px];
 }
 
 .auth-shell {
@@ -339,7 +339,7 @@ a {
 }
 
 .set-panel-header h3 {
-  @apply truncate text-lg font-black;
+  @apply break-words text-lg font-black;
   color: var(--color-tertiary);
 }
 
@@ -355,13 +355,13 @@ a {
 }
 
 .set-table {
-  @apply space-y-2 p-5;
+  @apply space-y-2 p-3 sm:p-5;
 }
 
 .set-table-head,
 .set-row {
-  @apply grid items-center gap-3;
-  grid-template-columns: 48px minmax(76px, 1fr) minmax(86px, 1fr) minmax(70px, 0.8fr) 86px;
+  @apply grid items-center gap-2 sm:gap-3;
+  grid-template-columns: 2.25rem minmax(0, 0.65fr) minmax(0, 1fr) minmax(4.5rem, auto);
 }
 
 .set-table-head {
@@ -385,7 +385,7 @@ a {
 }
 
 .set-field {
-  @apply rounded px-3 py-2 text-center;
+  @apply min-w-0 rounded px-1 py-2 text-center;
   background: rgba(11, 16, 7, 0.62);
   color: var(--color-muted);
 }
@@ -402,7 +402,7 @@ a {
 }
 
 .set-finish {
-  @apply rounded px-3 py-1 text-xs font-black uppercase tracking-wide;
+  @apply min-h-9 rounded px-2 py-1 text-xs font-bold;
   background: var(--color-primary);
   color: var(--color-ink);
 }
@@ -441,7 +441,12 @@ a {
   --progress: 0%;
   @apply grid h-14 w-14 shrink-0 place-items-center rounded-full text-xs font-black;
   background: conic-gradient(var(--color-primary) var(--progress), rgba(220, 239, 255, 0.12) 0);
-  color: var(--color-primary);
+  color: var(--color-tertiary);
+}
+
+.recovery-ring > span {
+  @apply grid h-11 w-11 place-items-center rounded-full;
+  background: var(--color-surface);
 }
 
 .mini-button,
@@ -457,7 +462,7 @@ a {
 }
 
 .plan-panel {
-  @apply flex min-h-[450px] flex-col p-5;
+  @apply flex flex-col p-5;
 }
 
 .plan-item {
@@ -474,12 +479,13 @@ a {
 .plan-dot {
   @apply grid h-8 w-8 shrink-0 place-items-center rounded-full border text-xs font-black;
   border-color: rgba(220, 239, 255, 0.22);
-  color: var(--color-ink);
+  color: var(--color-tertiary);
 }
 
 .plan-dot-done {
   border-color: var(--color-primary);
   background: var(--color-primary);
+  color: var(--color-ink);
 }
 
 .plan-item strong {
@@ -498,7 +504,7 @@ a {
 }
 
 .console-metrics {
-  @apply grid gap-3 sm:grid-cols-2 xl:grid-cols-4;
+  @apply grid gap-3 sm:grid-cols-3;
 }
 
 .metric-box {
@@ -513,19 +519,6 @@ a {
 .metric-box strong {
   @apply mt-2 block text-xl font-black uppercase tracking-wide;
   color: var(--color-tertiary);
-}
-
-.intensity-bars {
-  @apply mt-4 grid grid-cols-5 gap-1;
-}
-
-.intensity-bars span {
-  @apply h-1 rounded-full;
-  background: var(--color-primary);
-}
-
-.intensity-bars .muted {
-  background: rgba(220, 239, 255, 0.16);
 }
 
 .label {
@@ -546,12 +539,12 @@ a {
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-bold transition;
   background: var(--color-primary);
   color: var(--color-ink);
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   filter: brightness(0.92);
 }
 
@@ -567,8 +560,16 @@ a {
   background: rgba(0, 240, 255, 0.1);
 }
 
-.btn-secondary:disabled {
-  @apply cursor-not-allowed opacity-50;
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.next-set-button:disabled,
+.rest-button:disabled,
+.mini-button:disabled,
+.play-button:disabled {
+  @apply cursor-not-allowed border;
+  border-color: #46533c;
+  background: #27311f;
+  color: #b6c0ae;
 }
 
 .btn-danger {
@@ -599,9 +600,13 @@ a {
 }
 
 .table-wrap {
-  @apply overflow-hidden rounded-lg border shadow-sm;
+  @apply overflow-x-auto rounded-lg border shadow-sm;
   border-color: var(--color-line);
   background: var(--color-surface);
+}
+
+.mobile-nav {
+  scrollbar-width: none;
 }
 
 .data-table {

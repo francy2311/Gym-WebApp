@@ -7,11 +7,6 @@ import type {
   WeekDay,
 } from '../types/api'
 
-export const getTodayWorkout = async () => {
-  const { data } = await client.get<TodayWorkout | null>('/api/home/today')
-  return data
-}
-
 export const getDayWorkout = async (weekDay: WeekDay) => {
   const { data } = await client.get<TodayWorkout | null>(`/api/home/day/${weekDay}`)
   return data

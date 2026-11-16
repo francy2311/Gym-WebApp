@@ -46,7 +46,7 @@ export default function AppLayout() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-[#ccff00]">{APP_NAME}</p>
             <h1 className="text-lg font-bold tracking-normal text-[#dcefff]">Area operativa</h1>
-            <p className="mt-1 max-w-40 text-xs text-[#dcefff]/60">{APP_TAGLINE}</p>
+            <p className="mt-1 hidden max-w-40 text-xs text-[#dcefff]/70 md:block">{APP_TAGLINE}</p>
           </div>
           <nav className="hidden gap-2 md:flex md:flex-col">
             {navItems.map((item) => (
@@ -73,7 +73,7 @@ export default function AppLayout() {
             Esci
           </button>
         </div>
-        <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:hidden">
+        <nav className="mobile-nav flex gap-1 overflow-x-auto px-3 pb-3 md:hidden">
           {navItems.map((item) => (
             <NavLink
               key={item.to}

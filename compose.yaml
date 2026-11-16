@@ -1,0 +1,58 @@
+name: gym-webapp
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: gymtracker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    volumes:
+      - gymtracker-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "postgres", "-d", "gymtracker"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    image: gym-webapp-backend:latest
+    build: ./backend
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://db:5432/gymtracker
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      JWT_SECRET: ${JWT_SECRET:-change-this-development-secret-change-this-development-secret}
+      ACCOUNT_ADMIN_KEY: ${ACCOUNT_ADMIN_KEY:-}
+      ACCOUNT_ADMIN_REQUIRE_LOOPBACK: "false"
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/v3/api-docs"]
+      interval: 5s
+      timeout: 4s
+      retries: 20
+      start_period: 15s
+
+  frontend:
+    image: gym-webapp-frontend:latest
+    build: ./frontend
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-5173}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  gymtracker-postgres-data:
+    name: ${GYM_DB_VOLUME:-gym-webapp-postgres-data}
+    external: ${GYM_DB_EXTERNAL:-false}

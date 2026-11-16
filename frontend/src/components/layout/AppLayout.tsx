@@ -1,9 +1,38 @@
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { APP_NAME, APP_ROUTES, APP_TAGLINE, NAV_ITEMS } from '../../constants/app'
-import { clearAuthSession } from '../../lib/auth'
+import { getProfile } from '../../api/profileApi'
+import { APP_NAME, APP_ROUTES, APP_TAGLINE, AUTH_EVENT, NAV_ITEMS } from '../../constants/app'
+import { clearAuthSession, getManagedUserId, isAuthenticated, setManagedUserId } from '../../lib/auth'
+import type { Profile } from '../../types/api'
 
 export default function AppLayout() {
   const navigate = useNavigate()
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [error, setError] = useState(false)
+  const managedUser = profile?.admin ? getManagedUserId() : null
+  const navItems = profile?.admin ? [...NAV_ITEMS, { to: APP_ROUTES.admin, label: 'Admin' }] : NAV_ITEMS
+
+  useEffect(() => {
+    let active = true
+    const refresh = () => {
+      if (!isAuthenticated()) return
+      void getProfile().then((data) => {
+        if (active) {
+          if (!data.admin) setManagedUserId(null)
+          setProfile(data)
+          setError(false)
+        }
+      }).catch(() => {
+        if (active) setError(true)
+      })
+    }
+    refresh()
+    window.addEventListener(AUTH_EVENT.changed, refresh)
+    return () => {
+      active = false
+      window.removeEventListener(AUTH_EVENT.changed, refresh)
+    }
+  }, [])
 
   const logout = () => {
     clearAuthSession()
@@ -20,7 +49,7 @@ export default function AppLayout() {
             <p className="mt-1 max-w-40 text-xs text-[#dcefff]/60">{APP_TAGLINE}</p>
           </div>
           <nav className="hidden gap-2 md:flex md:flex-col">
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
@@ -45,7 +74,7 @@ export default function AppLayout() {
           </button>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:hidden">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -62,7 +91,19 @@ export default function AppLayout() {
       </aside>
       <main className="px-4 pb-8 pt-32 md:ml-64 md:px-8 md:pt-8">
         <div className="mx-auto max-w-7xl">
-          <Outlet />
+          {managedUser && (
+            <div className="panel mb-5 flex flex-wrap items-center justify-between gap-3">
+              <p>Stai gestendo gli allenamenti e il calendario dell’utente #{managedUser}.</p>
+              <button className="btn-secondary" onClick={() => {
+                setManagedUserId(null)
+                window.location.assign(APP_ROUTES.admin)
+              }}>
+                Esci dalla gestione utente
+              </button>
+            </div>
+          )}
+          {error && <p className="error-box">Impossibile caricare il profilo. Ricarica la pagina.</p>}
+          {profile && <Outlet context={profile} />}
         </div>
       </main>
     </div>

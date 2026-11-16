@@ -12,7 +12,7 @@ import { isAuthenticated, storeAuthToken } from '../lib/auth'
 export default function LoginPage() {
   usePageTitle('Accedi')
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
+  const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -25,14 +25,14 @@ export default function LoginPage() {
     event.preventDefault()
     setError('')
 
-    if (!email || !password) {
-      setError('Inserisci email e password.')
+    if (!identifier.trim() || !password) {
+      setError('Inserisci email o nome utente e password.')
       return
     }
 
     try {
       setLoading(true)
-      const data = await login({ usernameOrEmail: email, password })
+      const data = await login({ usernameOrEmail: identifier.trim(), password })
       storeAuthToken(data.accessToken)
       navigate(APP_ROUTES.home, { replace: true })
     } catch (err) {
@@ -63,11 +63,9 @@ export default function LoginPage() {
     >
       <form onSubmit={submit} className="space-y-4">
         <AuthField
-          label="Email"
-          type="email"
-          value={email}
-          onChange={setEmail}
-          placeholder="mario@esempio.it"
+          label="Email o nome utente"
+          value={identifier}
+          onChange={setIdentifier}
         />
         <AuthField
           label="Password"

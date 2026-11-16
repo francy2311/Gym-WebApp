@@ -28,7 +28,7 @@ public class ExerciseMapper {
         exercise.setNotes(request.notes());
     }
 
-    public ExerciseResponse toResponse(Exercise exercise) {
+    public ExerciseResponse toResponse(Exercise exercise, Long viewerId) {
         return new ExerciseResponse(
                 exercise.getId(),
                 exercise.getName(),
@@ -36,7 +36,8 @@ public class ExerciseMapper {
                 exercise.getMuscleGroup(),
                 exercise.getEquipment(),
                 exercise.getImageUrl(),
-                exercise.getNotes()
+                exercise.getNotes(),
+                exercise.getUser() != null && exercise.getUser().getId().equals(viewerId)
         );
     }
 }

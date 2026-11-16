@@ -31,3 +31,7 @@ export const getScheduleDay = async (weekDay: WeekDay) => {
   const { data } = await client.get<ScheduleEntry | null>(`/api/schedule/${weekDay}`)
   return data
 }
+
+export const removeScheduleDay = async (weekDay: WeekDay) => {
+  await client.delete(`/api/schedule/${weekDay}`)
+}

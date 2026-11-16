@@ -41,6 +41,9 @@ public class User {
     @Column(nullable = false)
     private boolean enabled;
 
+    @Column(nullable = false)
+    private boolean admin;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

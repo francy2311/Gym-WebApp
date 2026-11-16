@@ -25,8 +25,9 @@ public class ExerciseService {
     @Transactional
     public ExerciseResponse create(ExerciseRequest request) {
         Exercise exercise = exerciseMapper.toEntity(request);
-        exercise.setUser(currentUserService.getCurrentUser());
-        return exerciseMapper.toResponse(exerciseRepository.save(exercise));
+        User currentUser = currentUserService.getCurrentUser();
+        exercise.setUser(currentUser);
+        return exerciseMapper.toResponse(exerciseRepository.save(exercise), currentUser.getId());
     }
 
     @Transactional
@@ -38,46 +39,56 @@ public class ExerciseService {
                 .toList();
 
         return exerciseRepository.saveAll(exercises).stream()
-                .map(exerciseMapper::toResponse)
+                .map(exercise -> exerciseMapper.toResponse(exercise, currentUser.getId()))
                 .toList();
     }
 
     @Transactional
     public ExerciseResponse update(Long id, ExerciseRequest request) {
-        Exercise exercise = getExerciseEntity(id);
+        Exercise exercise = getOwnedExercise(id);
         exerciseMapper.updateEntity(exercise, request);
-        return exerciseMapper.toResponse(exercise);
+        return exerciseMapper.toResponse(exercise, currentUserService.getActor().getId());
     }
 
     @Transactional
     public void delete(Long id) {
-        exerciseRepository.delete(getExerciseEntity(id));
+        exerciseRepository.delete(getOwnedExercise(id));
     }
 
     @Transactional(readOnly = true)
     public ExerciseResponse getById(Long id) {
-        return exerciseMapper.toResponse(getExerciseEntity(id));
+        return exerciseMapper.toResponse(getExerciseEntity(id), currentUserService.getCurrentUser().getId());
     }
 
     @Transactional(readOnly = true)
     public List<ExerciseResponse> getAll(MuscleGroup muscleGroup) {
         User currentUser = currentUserService.getCurrentUser();
         List<Exercise> exercises = muscleGroup == null
-                ? exerciseRepository.findAllByUser(currentUser)
-                : exerciseRepository.findByMuscleGroupAndUser(muscleGroup, currentUser);
-        return exercises.stream().map(exerciseMapper::toResponse).toList();
+                ? exerciseRepository.findAll()
+                : exerciseRepository.findByMuscleGroup(muscleGroup);
+        return exercises.stream()
+                .map(exercise -> exerciseMapper.toResponse(exercise, currentUser.getId()))
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public List<ExerciseResponse> searchByName(String name) {
         User currentUser = currentUserService.getCurrentUser();
-        return exerciseRepository.findByNameContainingIgnoreCaseAndUser(name, currentUser).stream()
-                .map(exerciseMapper::toResponse)
+        return exerciseRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(exercise -> exerciseMapper.toResponse(exercise, currentUser.getId()))
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public Exercise getExerciseEntity(Long id) {
+        return exerciseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Exercise not found with id " + id));
+    }
+
+    private Exercise getOwnedExercise(Long id) {
+        if (currentUserService.getActor().isAdmin()) {
+            return getExerciseEntity(id);
+        }
         User currentUser = currentUserService.getCurrentUser();
         return exerciseRepository.findByIdAndUser(id, currentUser)
                 .orElseThrow(() -> new ResourceNotFoundException("Exercise not found with id " + id));

@@ -10,6 +10,7 @@ public record ExerciseResponse(
         MuscleGroup muscleGroup,
         EquipmentType equipment,
         String imageUrl,
-        String notes
+        String notes,
+        boolean editable
 ) {
 }

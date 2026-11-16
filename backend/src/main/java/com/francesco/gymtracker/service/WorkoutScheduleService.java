@@ -30,8 +30,9 @@ public class WorkoutScheduleService {
         User currentUser = currentUserService.getCurrentUser();
         Workout workout = workoutService.getWorkoutEntity(request.workoutId());
         scheduleRepository.deleteByWeekDayInAndUser(request.weekDays(), currentUser);
+        scheduleRepository.flush();
 
-        List<WorkoutSchedule> schedules = request.weekDays().stream()
+        List<WorkoutSchedule> schedules = request.weekDays().stream().distinct()
                 .map(day -> WorkoutSchedule.builder()
                         .weekDay(day)
                         .user(currentUser)
@@ -52,6 +53,11 @@ public class WorkoutScheduleService {
                 .sorted(Comparator.comparing(schedule -> schedule.getWeekDay().ordinal()))
                 .map(scheduleMapper::toResponse)
                 .toList();
+    }
+
+    @Transactional
+    public void removeDay(WeekDay weekDay) {
+        scheduleRepository.deleteByWeekDayInAndUser(List.of(weekDay), currentUserService.getCurrentUser());
     }
 
     @Transactional(readOnly = true)

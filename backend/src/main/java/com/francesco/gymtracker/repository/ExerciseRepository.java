@@ -10,11 +10,9 @@ import java.util.Optional;
 
 public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
 
-    List<Exercise> findByMuscleGroupAndUser(MuscleGroup muscleGroup, User user);
+    List<Exercise> findByMuscleGroup(MuscleGroup muscleGroup);
 
-    List<Exercise> findByNameContainingIgnoreCaseAndUser(String name, User user);
-
-    List<Exercise> findAllByUser(User user);
+    List<Exercise> findByNameContainingIgnoreCase(String name);
 
     Optional<Exercise> findByIdAndUser(Long id, User user);
 }

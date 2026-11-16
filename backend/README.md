@@ -1,5 +1,7 @@
 # Gymtracker Backend
 
+Per avviare l’intera applicazione con Docker e configurare l’amministrazione, usa il [README principale](../README.md). I comandi qui sotto riguardano l’avvio manuale del solo backend.
+
 Spring Boot backend for personal workout tracking.
 
 ## Stack
@@ -41,6 +43,31 @@ OpenAPI JSON:
 ```text
 http://localhost:8080/v3/api-docs
 ```
+
+## Local account recovery
+
+Stop the running backend and start it with a temporary admin key from the backend directory.
+
+```bash
+export ACCOUNT_ADMIN_KEY="$(openssl rand -hex 32)"
+printf '%s\n' "$ACCOUNT_ADMIN_KEY"
+SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
+```
+
+Open Swagger directly at `http://localhost:8080/swagger-ui.html` and enter the key under **Authorize → accountAdminKey**.
+Use `GET /api/admin/accounts/emails` to list the emails in the active database, then
+`POST /api/admin/accounts/password-reset` with `email` and `newPassword` to set a replacement password.
+The new password must contain at least eight characters and fit within 72 UTF-8 bytes.
+Password resets invalidate that account's sessions. These operations require the admin key and a loopback
+connection in the development profile.
+
+To create an administrator, use `POST /api/admin/accounts/administrators` in Swagger
+with the same key and a body containing `username`, `email` and `password`. Sign in
+with that account to open **Admin**. Select a user to manage their profile, workouts
+or weekly schedule. Public registration always creates a regular user.
+
+Signed-in users can edit their own username, email and password under **Profilo**.
+The login field accepts both username and email.
 
 ## Environment variables
 
@@ -94,7 +121,7 @@ curl -X POST http://localhost:8080/api/auth/login \
   -d '{"usernameOrEmail":"francesco","password":"password123"}'
 ```
 
-List exercises for the authenticated user:
+List shared exercises as an authenticated user:
 
 ```bash
 curl http://localhost:8080/api/exercises \
@@ -129,7 +156,8 @@ curl -X POST http://localhost:8080/api/exercises/bulk \
 
 ## Data model note
 
-Exercises, workouts, and weekly schedules are scoped to the authenticated user.
+Exercises are shared among authenticated users. Only the exercise owner can update or delete it.
+Workouts and weekly schedules are scoped to the authenticated user.
 
 ## Tests
 

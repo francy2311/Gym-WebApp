@@ -25,11 +25,22 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .or(() -> userRepository.findByEmail(usernameOrEmail))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        return toUserDetails(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserDetails loadExactUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(this::toUserDetails)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    private UserDetails toUserDetails(User user) {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .disabled(!user.isEnabled())
-                .authorities(List.of(new SimpleGrantedAuthority("ROLE_USER")))
+                .authorities(List.of(new SimpleGrantedAuthority(user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER")))
                 .build();
     }
 }

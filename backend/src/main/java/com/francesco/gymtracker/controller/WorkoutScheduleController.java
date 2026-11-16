@@ -7,11 +7,14 @@ import com.francesco.gymtracker.mapper.WorkoutScheduleMapper;
 import com.francesco.gymtracker.service.WorkoutScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -39,5 +42,11 @@ public class WorkoutScheduleController {
         return scheduleService.getScheduleByDay(weekDay)
                 .map(scheduleMapper::toResponse)
                 .orElse(null);
+    }
+
+    @DeleteMapping("/{weekDay}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeDay(@PathVariable WeekDay weekDay) {
+        scheduleService.removeDay(weekDay);
     }
 }

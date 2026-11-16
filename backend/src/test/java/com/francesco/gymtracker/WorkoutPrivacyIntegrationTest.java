@@ -92,7 +92,7 @@ class WorkoutPrivacyIntegrationTest {
     }
 
     @Test
-    void exercisesAreScopedToAuthenticatedUser() throws Exception {
+    void exercisesAreSharedButOnlyTheirOwnerCanModifyThem() throws Exception {
         String aliceToken = registerUser("alice-ex", "alice-ex@example.com");
         String bobToken = registerUser("bob-ex", "bob-ex@example.com");
 
@@ -111,16 +111,42 @@ class WorkoutPrivacyIntegrationTest {
                         .header("Authorization", bearer(aliceToken)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(exerciseId))
-                .andExpect(jsonPath("$[0].name").value("Incline Press"));
+                .andExpect(jsonPath("$[0].name").value("Incline Press"))
+                .andExpect(jsonPath("$[0].editable").value(true));
 
         mockMvc.perform(get("/api/exercises")
                         .header("Authorization", bearer(bobToken)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isEmpty());
+                .andExpect(jsonPath("$[0].id").value(exerciseId))
+                .andExpect(jsonPath("$[0].editable").value(false));
 
         mockMvc.perform(get("/api/exercises/{id}", exerciseId)
                         .header("Authorization", bearer(bobToken)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(exerciseId));
+
+        long workoutId = createWorkout(bobToken, """
+                {
+                  "name": "Shared Exercise Workout",
+                  "goal": "STRENGTH"
+                }
+                """);
+
+        mockMvc.perform(put("/api/workouts/{id}/exercises", workoutId)
+                        .header("Authorization", bearer(bobToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                [{
+                                  "exerciseId": %d,
+                                  "exerciseOrder": 1,
+                                  "sets": 3,
+                                  "reps": 8,
+                                  "restSeconds": 60
+                                }]
+                                """.formatted(exerciseId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.exercises[0].exercise.id").value(exerciseId))
+                .andExpect(jsonPath("$.exercises[0].exercise.editable").value(false));
 
         mockMvc.perform(put("/api/exercises/{id}", exerciseId)
                         .header("Authorization", bearer(bobToken))

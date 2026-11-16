@@ -44,7 +44,7 @@ public class WorkoutMapper {
     public WorkoutDetailResponse toDetailResponse(Workout workout) {
         List<WorkoutExerciseResponse> exercises = workout.getExercises().stream()
                 .sorted(Comparator.comparing(WorkoutExercise::getExerciseOrder))
-                .map(this::toWorkoutExerciseResponse)
+                .map(exercise -> toWorkoutExerciseResponse(exercise, workout.getUser().getId()))
                 .toList();
 
         return new WorkoutDetailResponse(
@@ -56,7 +56,7 @@ public class WorkoutMapper {
         );
     }
 
-    public WorkoutExerciseResponse toWorkoutExerciseResponse(WorkoutExercise workoutExercise) {
+    private WorkoutExerciseResponse toWorkoutExerciseResponse(WorkoutExercise workoutExercise, Long viewerId) {
         return new WorkoutExerciseResponse(
                 workoutExercise.getId(),
                 workoutExercise.getExerciseOrder(),
@@ -64,7 +64,7 @@ public class WorkoutMapper {
                 workoutExercise.getReps(),
                 workoutExercise.getRestSeconds(),
                 workoutExercise.getNotes(),
-                exerciseMapper.toResponse(workoutExercise.getExercise())
+                exerciseMapper.toResponse(workoutExercise.getExercise(), viewerId)
         );
     }
 }

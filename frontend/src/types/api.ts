@@ -16,6 +16,14 @@ export interface AuthResponse {
   email: string
 }
 
+export interface Profile {
+  id: number
+  username: string
+  email: string
+  admin: boolean
+  enabled: boolean
+}
+
 export interface User {
   id?: number
   name?: string
@@ -66,6 +74,7 @@ export type WorkoutGoal =
 
 export interface Exercise {
   id: number
+  editable: boolean
   name: string
   description: string
   muscleGroup: MuscleGroup

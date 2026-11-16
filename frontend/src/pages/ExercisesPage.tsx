@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import {
   createExercise,
   deleteExercise,
@@ -13,10 +14,12 @@ import type {
   Exercise,
   ExercisePayload,
   MuscleGroup,
+  Profile,
 } from '../types/api'
 
 export default function ExercisesPage() {
   usePageTitle('Esercizi')
+  const profile = useOutletContext<Profile>()
   const [exercises, setExercises] = useState<Exercise[]>([])
   const [form, setForm] = useState<ExercisePayload>(EMPTY_EXERCISE_FORM)
   const [editingId, setEditingId] = useState<number | null>(null)
@@ -232,14 +235,16 @@ export default function ExercisesPage() {
                   <td>{formatEquipment(exercise.equipment)}</td>
                   <td>{exercise.description || '-'}</td>
                   <td>
-                    <div className="flex gap-2">
-                      <button className="btn-secondary" onClick={() => edit(exercise)}>
-                        Modifica
-                      </button>
-                      <button className="btn-danger" onClick={() => void remove(exercise.id)}>
-                        Elimina
-                      </button>
-                    </div>
+                    {(exercise.editable || profile.admin) && (
+                      <div className="flex gap-2">
+                        <button className="btn-secondary" onClick={() => edit(exercise)}>
+                          Modifica
+                        </button>
+                        <button className="btn-danger" onClick={() => void remove(exercise.id)}>
+                          Elimina
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

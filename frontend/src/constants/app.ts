@@ -20,10 +20,13 @@ export const APP_ROUTES = {
   exercises: '/exercises',
   workouts: '/workouts',
   schedule: '/schedule',
+  profile: '/profilo',
+  admin: '/admin',
 } as const
 
 export const STORAGE_KEYS = {
   token: 'gym-app-token',
+  managedUser: 'gym-app-managed-user',
 } as const
 
 export const INVALID_STORAGE_TOKENS = new Set(['undefined', 'null', ''])
@@ -37,6 +40,7 @@ export const NAV_ITEMS = [
   { to: APP_ROUTES.exercises, label: 'Esercizi' },
   { to: APP_ROUTES.workouts, label: 'Allenamenti' },
   { to: APP_ROUTES.schedule, label: 'Calendario' },
+  { to: APP_ROUTES.profile, label: 'Profilo' },
 ] as const
 
 export const WEEK_DAYS: Array<{ key: WeekDay; label: string }> = [

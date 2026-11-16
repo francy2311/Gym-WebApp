@@ -69,6 +69,7 @@ public class WorkoutService {
         validateUniqueOrders(requests);
         Workout workout = getWorkoutEntity(workoutId);
         workout.getExercises().clear();
+        workoutRepository.flush();
 
         for (WorkoutExerciseRequest request : requests) {
             Exercise exercise = exerciseService.getExerciseEntity(request.exerciseId());

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { APP_NAME, WEEK_DAYS } from '../constants/app'
-import { getSchedule, updateSchedule } from '../api/scheduleApi'
+import { getSchedule, removeScheduleDay, updateSchedule } from '../api/scheduleApi'
 import { getWorkouts } from '../api/workoutApi'
 import { usePageTitle } from '../hooks/usePageTitle'
 import type { Schedule, SchedulePayload, WeekDay, Workout } from '../types/api'
@@ -105,6 +105,21 @@ export default function SchedulePage() {
     }
   }
 
+  async function unassign(day: WeekDay) {
+    setSaving(true)
+    setError('')
+    setSuccess('')
+    try {
+      await removeScheduleDay(day)
+      setSchedule((current) => current.filter((entry) => entry.weekDay !== day))
+      setSuccess('Assegnazione rimossa.')
+    } catch {
+      setError('Impossibile rimuovere l’assegnazione.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <section className="space-y-6">
       <header>
@@ -184,7 +199,12 @@ export default function SchedulePage() {
                     </p>
                   </div>
                   {workout ? (
-                    <span className="badge">{workout.name}</span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="badge">{workout.name}</span>
+                      <button className="btn-secondary" disabled={saving} onClick={() => void unassign(day.key)}>
+                        Rimuovi assegnazione
+                      </button>
+                    </div>
                   ) : (
                     <span className="badge">Vuoto</span>
                   )}

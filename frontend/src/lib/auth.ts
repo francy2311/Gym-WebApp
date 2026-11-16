@@ -20,7 +20,20 @@ export function storeAuthToken(token: string) {
 
 export function clearAuthSession() {
   localStorage.removeItem(STORAGE_KEYS.token)
+  sessionStorage.removeItem(STORAGE_KEYS.managedUser)
   window.dispatchEvent(new Event(AUTH_EVENT.changed))
+}
+
+export function getManagedUserId() {
+  return sessionStorage.getItem(STORAGE_KEYS.managedUser)
+}
+
+export function setManagedUserId(id: number | null) {
+  if (id === null) {
+    sessionStorage.removeItem(STORAGE_KEYS.managedUser)
+  } else {
+    sessionStorage.setItem(STORAGE_KEYS.managedUser, String(id))
+  }
 }
 
 export function redirectToLogin() {
